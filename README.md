@@ -22,6 +22,22 @@ Libris, etap 2/3: aplikacja konsolowa do zarządzania biblioteką, napisana obie
 | maven-surefire-plugin | 3.5.5 |
 | maven-shade-plugin | 3.6.2 |
 
+## Postęp
+
+- [x] Konfiguracja Maven (Java 25, Jackson 3.2.4, JUnit 6.1.3)
+- [x] Model `Book` (UUID, ISBN, gatunek) z walidacją i testami jednostkowymi
+- [ ] Modele `Member` i `Loan`
+- [ ] Repozytorium zapisujące dane do JSON
+- [ ] Serwisy: `BookService`, `MemberService`, `LoanService`
+- [ ] Menu konsolowe
+- [ ] Wydanie 1.0.0 z gotowym plikiem JAR
+
+## Model danych
+
+Każdy obiekt `Book` to jeden fizyczny egzemplarz książki z własnym identyfikatorem UUID.
+Kilka egzemplarzy tego samego tytułu rozpoznaję po wspólnym numerze ISBN.
+Informacji o dostępności nie trzymam w książce: wynika z istnienia aktywnego wypożyczenia (`Loan`).
+
 ## Planowana architektura
 
 - `model` – klasy domenowe (`Book`, `Member`, `Loan`),
