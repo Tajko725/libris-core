@@ -26,7 +26,7 @@ Libris, etap 2/3: aplikacja konsolowa do zarządzania biblioteką, napisana obie
 
 - [x] Konfiguracja Maven (Java 25, Jackson 3.2.4, JUnit 6.1.3)
 - [x] Model `Book` (UUID, ISBN, gatunek) z walidacją i testami jednostkowymi
-- [ ] Modele `Member` i `Loan`
+- [x] Modele `Member` (czytelnik) i `Loan` (wypożyczenie) z walidacją i testami jednostkowymi
 - [ ] Repozytorium zapisujące dane do JSON
 - [ ] Serwisy: `BookService`, `MemberService`, `LoanService`
 - [ ] Menu konsolowe
@@ -37,6 +37,9 @@ Libris, etap 2/3: aplikacja konsolowa do zarządzania biblioteką, napisana obie
 Każdy obiekt `Book` to jeden fizyczny egzemplarz książki z własnym identyfikatorem UUID.
 Kilka egzemplarzy tego samego tytułu rozpoznaję po wspólnym numerze ISBN.
 Informacji o dostępności nie trzymam w książce: wynika z istnienia aktywnego wypożyczenia (`Loan`).
+
+Wypożyczenie (`Loan`) przechowuje tylko identyfikatory książki i czytelnika oraz daty: wypożyczenia, terminu zwrotu (30 dni) i zwrotu.
+Wypożyczenie jest aktywne, dopóki nie ma daty zwrotu.
 
 ## Planowana architektura
 
