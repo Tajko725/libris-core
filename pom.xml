@@ -15,7 +15,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <main.class>pl.tajko.library.Main</main.class>
 
-        <jackson.version>3.1.3</jackson.version>
+        <jackson.version>3.2.4</jackson.version>
         <junit.version>6.1.3</junit.version>
 
         <maven-compiler-plugin.version>3.14.0</maven-compiler-plugin.version>
