@@ -16,7 +16,7 @@ Libris, etap 2/3: aplikacja konsolowa do zarządzania biblioteką, napisana obie
 |-------------|--------|
 | Java (JDK) | 25 |
 | Maven | 3 (wbudowany w IntelliJ IDEA) |
-| Jackson (`tools.jackson.core:jackson-databind`) | 3.1.3 |
+| Jackson (`tools.jackson.core:jackson-databind`) | 3.2.4 |
 | JUnit Jupiter | 6.1.3 |
 | maven-compiler-plugin | 3.14.0 |
 | maven-surefire-plugin | 3.5.5 |
