@@ -1,7 +1,11 @@
 package pl.tajko.library;
 
 import pl.tajko.library.repository.RepositoryException;
+import pl.tajko.library.ui.BookMenu;
 import pl.tajko.library.ui.ConsoleIO;
+import pl.tajko.library.ui.InputClosedException;
+import pl.tajko.library.ui.MainMenu;
+import pl.tajko.library.ui.MemberMenu;
 
 import java.io.UncheckedIOException;
 import java.nio.charset.Charset;
@@ -35,11 +39,14 @@ public final class Main {
         Path dataDir = resolveDataDir(args);
         try {
             LibraryContext context = new LibraryContext(dataDir, Clock.systemDefaultZone());
-            io.println("Libris - biblioteka w konsoli");
             io.println("Folder z danymi: " + dataDir.toAbsolutePath());
-            io.println("Tytuły w katalogu: " + context.bookService().getCatalog().size());
-            io.println("Czytelnicy: " + context.memberService().getMembers().size());
-            io.println("Aktywne wypożyczenia: " + context.loanService().getActiveLoans().size());
+            MainMenu mainMenu = new MainMenu(io,
+                    new BookMenu(io, context.bookService()),
+                    new MemberMenu(io, context.memberService()));
+            mainMenu.run();
+        } catch (InputClosedException e) {
+            io.println();
+            io.println("Koniec danych wejściowych, kończę program.");
         } catch (RepositoryException | UncheckedIOException e) {
             io.printError("nie można uruchomić programu: " + e.getMessage());
             System.exit(1);
