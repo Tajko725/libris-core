@@ -27,7 +27,7 @@ Libris, etap 2/3: aplikacja konsolowa do zarządzania biblioteką, napisana obie
 - [x] Konfiguracja Maven (Java 25, Jackson 3.2.4, JUnit 6.1.3)
 - [x] Model `Book` (UUID, ISBN, gatunek) z walidacją i testami jednostkowymi
 - [x] Modele `Member` (czytelnik) i `Loan` (wypożyczenie) z walidacją i testami jednostkowymi
-- [ ] Repozytorium zapisujące dane do JSON
+- [x] Repozytorium zapisujące dane do plików JSON z bezpiecznym zapisem i testami
 - [ ] Serwisy: `BookService`, `MemberService`, `LoanService`
 - [ ] Menu konsolowe
 - [ ] Wydanie 1.0.0 z gotowym plikiem JAR
@@ -40,6 +40,15 @@ Informacji o dostępności nie trzymam w książce: wynika z istnienia aktywnego
 
 Wypożyczenie (`Loan`) przechowuje tylko identyfikatory książki i czytelnika oraz daty: wypożyczenia, terminu zwrotu (30 dni) i zwrotu.
 Wypożyczenie jest aktywne, dopóki nie ma daty zwrotu.
+
+## Przechowywanie danych
+
+Dane zapisuję w trzech plikach JSON w katalogu `data/`, który powstaje w miejscu uruchomienia aplikacji:
+`books.json`, `members.json` i `loans.json`.
+Po każdej zmianie zapisuję dane najpierw do pliku tymczasowego, a dopiero potem podmieniam właściwy plik,
+dzięki czemu przerwanie programu w trakcie zapisu nie uszkadza danych.
+Gdy plik jest uszkodzony, aplikacja zgłasza błąd zamiast zaczynać od pustych danych.
+Katalog `data/` dodaję do `.gitignore`, więc dane nie trafiają do repozytorium.
 
 ## Planowana architektura
 
