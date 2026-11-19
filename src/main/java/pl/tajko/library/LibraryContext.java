@@ -44,6 +44,9 @@ public class LibraryContext {
     /** Serwis wypożyczeń. */
     private final LoanService loanService;
 
+    /** Repozytorium wypożyczeń, udostępniane wyłącznie danym przykładowym. */
+    private final Repository<Loan> loanRepository;
+
     /**
      * Tworzy kontekst i podłącza pliki z podanego folderu. Brakujący folder zostanie utworzony.
      *
@@ -67,8 +70,7 @@ public class LibraryContext {
                 new JsonRepository<>(dataDir.resolve(BOOKS_FILE), Book.class, Book::getId);
         Repository<Member> memberRepository =
                 new JsonRepository<>(dataDir.resolve(MEMBERS_FILE), Member.class, Member::getId);
-        Repository<Loan> loanRepository =
-                new JsonRepository<>(dataDir.resolve(LOANS_FILE), Loan.class, Loan::getId);
+        this.loanRepository = new JsonRepository<>(dataDir.resolve(LOANS_FILE), Loan.class, Loan::getId);
 
         this.bookService = new BookService(bookRepository, loanRepository);
         this.memberService = new MemberService(memberRepository, loanRepository, clock);
@@ -109,5 +111,17 @@ public class LibraryContext {
      */
     public LoanService loanService() {
         return loanService;
+    }
+
+    /**
+     * Zwraca repozytorium wypożyczeń.
+     * <p>
+     * Normalnie używa się {@link LoanService}. Repozytorium jest udostępnione tylko po to, aby dane przykładowe
+     * mogły zapisać wypożyczenia z datą z przeszłości (serwis zawsze wypożycza "od dzisiaj").
+     *
+     * @return repozytorium wypożyczeń
+     */
+    public Repository<Loan> loanRepository() {
+        return loanRepository;
     }
 }
