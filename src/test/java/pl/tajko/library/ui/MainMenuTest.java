@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import pl.tajko.library.LibraryContext;
+import pl.tajko.library.demo.DemoDataLoader;
 
 import java.nio.file.Path;
 import java.time.Clock;
@@ -42,6 +43,16 @@ class MainMenuTest {
     }
 
     /**
+     * Tworzy loader danych przykładowych na kontekście testowym.
+     *
+     * @return loader danych przykładowych
+     */
+    private DemoDataLoader demoLoader() {
+        return new DemoDataLoader(context.bookService(), context.memberService(), context.loanService(),
+                context.loanRepository(), CLOCK);
+    }
+
+    /**
      * Uruchamia menu główne z gotowym skryptem odpowiedzi.
      *
      * @param script odpowiedzi użytkownika
@@ -49,9 +60,12 @@ class MainMenuTest {
      */
     private TestConsole run(String script) {
         TestConsole console = new TestConsole(script);
-        new MainMenu(console.io(),
-                new BookMenu(console.io(), context.bookService()),
-                new MemberMenu(console.io(), context.memberService())).run();
+        ConsoleIO io = console.io();
+        new MainMenu(io,
+                new BookMenu(io, context.bookService()),
+                new MemberMenu(io, context.memberService()),
+                new LoanMenu(io, context.loanService(), context.memberService(), context.bookService()),
+                demoLoader()).run();
         return console;
     }
 
@@ -84,9 +98,46 @@ class MainMenuTest {
     @Test
     @DisplayName("otwiera menu czytelników i wraca")
     void shouldOpenMemberMenu() {
-        TestConsole console = run("2\n0\n0\n");
+        assertTrue(run("2\n0\n0\n").output().contains("--- Czytelnicy ---"));
+    }
 
-        assertTrue(console.output().contains("--- Czytelnicy ---"));
+    /**
+     * Wybór 3 powinien otworzyć menu wypożyczeń.
+     */
+    @Test
+    @DisplayName("otwiera menu wypożyczeń i wraca")
+    void shouldOpenLoanMenu() {
+        assertTrue(run("3\n0\n0\n").output().contains("--- Wypożyczenia ---"));
+    }
+
+    /**
+     * Wybór 4 w pustej bibliotece powinien załadować dane przykładowe.
+     */
+    @Test
+    @DisplayName("ładuje dane przykładowe do pustej biblioteki")
+    void shouldLoadDemoData() {
+        TestConsole console = run("4\n0\n");
+
+        assertAll(
+                () -> assertTrue(console.output().contains("Załadowano dane przykładowe: 12 tytułów")),
+                () -> assertEquals(12, context.bookService().getCatalog().size()),
+                () -> assertEquals(5, context.memberService().getMembers().size())
+        );
+    }
+
+    /**
+     * Drugie załadowanie powinno dać komunikat błędu i niczego nie zdublować.
+     */
+    @Test
+    @DisplayName("drugie załadowanie danych przykładowych daje komunikat błędu")
+    void shouldRejectSecondDemoLoad() {
+        TestConsole console = run("4\n4\n0\n");
+
+        assertAll(
+                () -> assertEquals(1, console.count("Załadowano dane przykładowe")),
+                () -> assertEquals(1, console.count("Błąd:")),
+                () -> assertEquals(12, context.bookService().getCatalog().size())
+        );
     }
 
     /**
@@ -119,14 +170,23 @@ class MainMenuTest {
     @DisplayName("konstruktor odrzuca puste zależności")
     void shouldRejectNullDependencies() {
         TestConsole console = new TestConsole("");
-        BookMenu bookMenu = new BookMenu(console.io(), context.bookService());
-        MemberMenu memberMenu = new MemberMenu(console.io(), context.memberService());
+        ConsoleIO io = console.io();
+        BookMenu bookMenu = new BookMenu(io, context.bookService());
+        MemberMenu memberMenu = new MemberMenu(io, context.memberService());
+        LoanMenu loanMenu = new LoanMenu(io, context.loanService(), context.memberService(), context.bookService());
+        DemoDataLoader loader = demoLoader();
 
         assertAll(
-                () -> assertThrows(IllegalArgumentException.class, () -> new MainMenu(null, bookMenu, memberMenu)),
                 () -> assertThrows(IllegalArgumentException.class,
-                        () -> new MainMenu(console.io(), null, memberMenu)),
-                () -> assertThrows(IllegalArgumentException.class, () -> new MainMenu(console.io(), bookMenu, null))
+                        () -> new MainMenu(null, bookMenu, memberMenu, loanMenu, loader)),
+                () -> assertThrows(IllegalArgumentException.class,
+                        () -> new MainMenu(io, null, memberMenu, loanMenu, loader)),
+                () -> assertThrows(IllegalArgumentException.class,
+                        () -> new MainMenu(io, bookMenu, null, loanMenu, loader)),
+                () -> assertThrows(IllegalArgumentException.class,
+                        () -> new MainMenu(io, bookMenu, memberMenu, null, loader)),
+                () -> assertThrows(IllegalArgumentException.class,
+                        () -> new MainMenu(io, bookMenu, memberMenu, loanMenu, null))
         );
     }
 }

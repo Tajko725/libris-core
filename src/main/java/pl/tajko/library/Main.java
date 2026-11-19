@@ -1,11 +1,8 @@
 package pl.tajko.library;
 
+import pl.tajko.library.demo.DemoDataLoader;
 import pl.tajko.library.repository.RepositoryException;
-import pl.tajko.library.ui.BookMenu;
-import pl.tajko.library.ui.ConsoleIO;
-import pl.tajko.library.ui.InputClosedException;
-import pl.tajko.library.ui.MainMenu;
-import pl.tajko.library.ui.MemberMenu;
+import pl.tajko.library.ui.*;
 
 import java.io.UncheckedIOException;
 import java.nio.charset.Charset;
@@ -38,11 +35,15 @@ public final class Main {
         ConsoleIO io = new ConsoleIO(System.in, System.out, inputCharset());
         Path dataDir = resolveDataDir(args);
         try {
-            LibraryContext context = new LibraryContext(dataDir, Clock.systemDefaultZone());
+            Clock clock = Clock.systemDefaultZone();
+            LibraryContext context = new LibraryContext(dataDir, clock);
             io.println("Folder z danymi: " + dataDir.toAbsolutePath());
             MainMenu mainMenu = new MainMenu(io,
                     new BookMenu(io, context.bookService()),
-                    new MemberMenu(io, context.memberService()));
+                    new MemberMenu(io, context.memberService()),
+                    new LoanMenu(io, context.loanService(), context.memberService(), context.bookService()),
+                    new DemoDataLoader(context.bookService(), context.memberService(), context.loanService(),
+                            context.loanRepository(), clock));
             mainMenu.run();
         } catch (InputClosedException e) {
             io.println();
