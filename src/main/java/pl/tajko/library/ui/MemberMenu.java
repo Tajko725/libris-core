@@ -159,17 +159,17 @@ public class MemberMenu {
      */
     private void printTable(List<MemberSummary> members) {
         io.println();
-        io.printf("%-4s %-28s %-30s %-11s %s%n", "Lp.", "Czytelnik", "E-mail", "Od", "Wypożyczenia");
-        io.println("-".repeat(88));
+        io.printf("%-4s %-28s %-36s %-11s %s%n", "Lp.", "Czytelnik", "E-mail", "Od", "Wypożyczenia");
+        io.println("-".repeat(94));
         for (int i = 0; i < members.size(); i++) {
             MemberSummary member = members.get(i);
             String loans = member.hasOverdueLoans()
                     ? member.activeLoans() + " (po terminie: " + member.overdueLoans() + ")"
                     : String.valueOf(member.activeLoans());
-            io.printf("%-4s %-28s %-30s %-11s %s%n",
+            io.printf("%-4s %-28s %-36s %-11s %s%n",
                     (i + 1) + ".",
                     TextFormat.shorten(member.fullName(), 28),
-                    TextFormat.shorten(member.email(), 30),
+                    TextFormat.shorten(member.email(), 36),
                     member.registeredAt(),
                     loans);
         }

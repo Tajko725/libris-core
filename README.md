@@ -38,6 +38,7 @@ Libris, etap 2/3: aplikacja konsolowa do zarządzania biblioteką, napisana obie
 - [x] Interfejs konsolowy: wypożyczenia i zwroty, dane przykładowe
 - [ ] Menu konsolowe
 - [ ] Wydanie 1.0.0 z gotowym plikiem JAR
+- [x] Wydanie 1.0.0: plik JAR, tag `v1.0.0` i GitHub Release
 
 ## Model danych
 
@@ -84,10 +85,24 @@ a w aplikacji zegara systemowego. Dzięki temu wyniki testów nie zależą od dn
 - `ui` – menu konsolowe,
 - `Main` – punkt startowy aplikacji.
 
+## Pobranie i uruchomienie
+
+Gotowy plik JAR jest w [najnowszym wydaniu](https://github.com/Tajko725/libris-core/releases/latest).
+Do uruchomienia wystarczy zainstalowana Java 25:
+
+    java -jar libris-core-1.0.0.jar
+
+Przy pierwszym uruchomieniu wybieram w menu „Załaduj dane przykładowe”, żeby od razu zobaczyć, jak działa program.
+
 ## Uruchomienie
 
 Projekt jest na etapie konfiguracji, więc aplikacja nie jest jeszcze gotowa do uruchomienia.
 Budowanie projektu: `mvn clean package` albo w IntelliJ: okno **Maven** → **Lifecycle** → **package**.
+
+### Budowanie ze źródeł
+
+W IntelliJ: **Maven** → **Lifecycle** → **clean**, potem **package**. Gotowy plik jest w
+`target/libris-core-1.0.0.jar`. Z linii poleceń (gdy Maven jest w PATH): `mvn clean package`.
 
 ### Menu programu
 
@@ -103,7 +118,7 @@ Budowanie projektu: `mvn clean package` albo w IntelliJ: okno **Maven** → **Li
 Program zapisuje dane w plikach JSON (`books.json`, `members.json`, `loans.json`).
 Domyślnie używa folderu `data` obok miejsca uruchomienia. Inny folder podaję jako pierwszy argument:
 
-    java -jar libris-core.jar C:\moje-dane
+    java -jar libris-core-1.0.0.jar C:\moje-dane
 
 Brakujący folder tworzę automatycznie.
 
@@ -112,3 +127,7 @@ Brakujący folder tworzę automatycznie.
 Pracuję według GitFlow: `main` zawiera tylko wydania, `develop` to gałąź robocza,
 a każda funkcja powstaje w osobnej gałęzi `feature/*` i trafia do `develop` przez Pull Request.
 Commity piszę według Conventional Commits (`feat:`, `docs:`, `chore:`).
+
+## Licencja
+
+Projekt jest dostępny na licencji MIT (plik `LICENSE`).
