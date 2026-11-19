@@ -283,4 +283,80 @@ class ConsoleIOTest {
             assertEquals("Linia" + nl + nl + "1. Czysty kod" + nl + "Błąd: coś poszło nie tak" + nl, printed());
         }
     }
+
+    /**
+     * Testy wczytywania z wartością domyślną.
+     */
+    @Nested
+    @DisplayName("wartości domyślne")
+    class DefaultValueTests {
+
+        /**
+         * Sam Enter powinien zwrócić dotychczasową wartość, a zachęta pokazywać ją w nawiasie.
+         */
+        @Test
+        @DisplayName("readLineOrDefault: Enter zostawia wartość domyślną")
+        void shouldKeepDefaultText() {
+            ConsoleIO io = io("\n");
+
+            assertAll(
+                    () -> assertEquals("Stary tytuł", io.readLineOrDefault("Tytuł", "Stary tytuł")),
+                    () -> assertEquals("Tytuł [Stary tytuł]: ", printed())
+            );
+        }
+
+        /**
+         * Wpisany tekst powinien zastąpić wartość domyślną.
+         */
+        @Test
+        @DisplayName("readLineOrDefault: wpisany tekst zastępuje wartość domyślną")
+        void shouldReplaceDefaultText() {
+            assertEquals("Nowy", io("  Nowy  \n").readLineOrDefault("Tytuł", "Stary"));
+        }
+
+        /**
+         * Sam Enter powinien zwrócić dotychczasową liczbę.
+         */
+        @Test
+        @DisplayName("readIntOrDefault: Enter zostawia wartość domyślną")
+        void shouldKeepDefaultNumber() {
+            assertEquals(2008, io("\n").readIntOrDefault("Rok", 1450, 2026, 2008));
+        }
+
+        /**
+         * Wpisana poprawna liczba powinna zastąpić wartość domyślną.
+         */
+        @Test
+        @DisplayName("readIntOrDefault: wpisana liczba zastępuje wartość domyślną")
+        void shouldReplaceDefaultNumber() {
+            assertEquals(1999, io("1999\n").readIntOrDefault("Rok", 1450, 2026, 2008));
+        }
+
+        /**
+         * Niepoprawne wpisy powinny dać błąd i ponowne pytanie.
+         */
+        @Test
+        @DisplayName("readIntOrDefault: powtarza pytanie po niepoprawnym wpisie")
+        void shouldAskAgainAfterInvalidNumber() {
+            ConsoleIO io = io("abc\n3000\n1999\n");
+
+            int result = io.readIntOrDefault("Rok", 1450, 2026, 2008);
+
+            assertAll(
+                    () -> assertEquals(1999, result),
+                    () -> assertEquals(2, errorCount())
+            );
+        }
+
+        /**
+         * Odwrócony zakres to błąd programisty.
+         */
+        @Test
+        @DisplayName("readIntOrDefault: odrzuca odwrócony zakres")
+        void shouldRejectInvertedRange() {
+            ConsoleIO io = io("\n");
+
+            assertThrows(IllegalArgumentException.class, () -> io.readIntOrDefault("Rok", 10, 1, 5));
+        }
+    }
 }
