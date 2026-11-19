@@ -161,4 +161,51 @@ public class ConsoleIO {
             printError("Wpisz t (tak) albo n (nie).");
         }
     }
+
+    /**
+     * Wczytuje tekst, pokazując w nawiasie kwadratowym dotychczasową wartość.
+     * Samo wciśnięcie Enter zostawia wartość bez zmian. Używane przy edycji.
+     *
+     * @param prompt       nazwa pola (bez dwukropka), np. "Tytuł"
+     * @param defaultValue dotychczasowa wartość zwracana po wciśnięciu samego Enter
+     * @return wpisany tekst bez spacji na brzegach albo {@code defaultValue}
+     * @throws InputClosedException jeśli wejście się skończyło
+     */
+    public String readLineOrDefault(String prompt, String defaultValue) {
+        String line = readLine(prompt + " [" + defaultValue + "]: ");
+        return line.isEmpty() ? defaultValue : line;
+    }
+
+    /**
+     * Wczytuje liczbę całkowitą z zakresu, pokazując w nawiasie kwadratowym dotychczasową wartość.
+     * Samo wciśnięcie Enter zwraca wartość domyślną. Przy niepoprawnym wpisie wypisuje błąd i pyta ponownie.
+     *
+     * @param prompt       nazwa pola (bez dwukropka), np. "Rok wydania"
+     * @param min          najmniejsza dozwolona wartość (włącznie)
+     * @param max          największa dozwolona wartość (włącznie)
+     * @param defaultValue dotychczasowa wartość zwracana po wciśnięciu samego Enter
+     * @return liczba z zakresu {@code min..max} albo {@code defaultValue}
+     * @throws IllegalArgumentException jeśli {@code min} jest większe od {@code max}
+     * @throws InputClosedException     jeśli wejście się skończyło
+     */
+    public int readIntOrDefault(String prompt, int min, int max, int defaultValue) {
+        if (min > max) {
+            throw new IllegalArgumentException("Dolna granica zakresu jest większa od górnej");
+        }
+        while (true) {
+            String line = readLine(prompt + " [" + defaultValue + "]: ");
+            if (line.isEmpty()) {
+                return defaultValue;
+            }
+            try {
+                int value = Integer.parseInt(line);
+                if (value >= min && value <= max) {
+                    return value;
+                }
+            } catch (NumberFormatException e) {
+                // to nie jest liczba, więc przechodzimy do komunikatu poniżej
+            }
+            printError("Podaj liczbę całkowitą od " + min + " do " + max + " albo wciśnij Enter.");
+        }
+    }
 }
