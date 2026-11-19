@@ -6,7 +6,7 @@
 
     <groupId>pl.tajko.library</groupId>
     <artifactId>libris-core</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>Libris Core</name>
     <description>Libris, etap 2/3: aplikacja konsolowa do zarządzania biblioteką (OOP, zapis do JSON)</description>
 
