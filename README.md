@@ -35,7 +35,7 @@ Libris, etap 2/3: aplikacja konsolowa do zarządzania biblioteką, napisana obie
 - [x] `LoanService`: wypożyczanie po ISBN, zwroty, limity, listy wypożyczeń, testy z Mockito
 - [x] Interfejs konsolowy, fundament: `ConsoleIO`, `LibraryContext`, folder danych jako argument
 - [x] Interfejs konsolowy: menu główne, katalog książek (z podglądem egzemplarzy) i czytelnicy
-- [ ] Interfejs konsolowy: wypożyczenia i zwroty, dane przykładowe
+- [x] Interfejs konsolowy: wypożyczenia i zwroty, dane przykładowe
 - [ ] Menu konsolowe
 - [ ] Wydanie 1.0.0 z gotowym plikiem JAR
 
@@ -88,6 +88,15 @@ a w aplikacji zegara systemowego. Dzięki temu wyniki testów nie zależą od dn
 
 Projekt jest na etapie konfiguracji, więc aplikacja nie jest jeszcze gotowa do uruchomienia.
 Budowanie projektu: `mvn clean package` albo w IntelliJ: okno **Maven** → **Lifecycle** → **package**.
+
+### Menu programu
+
+- **Katalog książek**: katalog zgrupowany po ISBN (wolne/razem), podgląd egzemplarzy z krótkim identyfikatorem,
+  wyszukiwanie, dodawanie książek i egzemplarzy, edycja danych, usuwanie egzemplarza.
+- **Czytelnicy**: lista z liczbą wypożyczeń, wyszukiwanie, dodawanie, edycja i usuwanie.
+- **Wypożyczenia**: wypożyczanie (czytelnik, potem tytuł), zwroty, listy aktywnych, po terminie i historia.
+- **Załaduj dane przykładowe**: 12 tytułów, 5 czytelników i 6 wypożyczeń (w tym jedno po terminie).
+  Działa tylko, gdy biblioteka jest pusta.
 
 ### Folder z danymi
 
