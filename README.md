@@ -33,6 +33,8 @@ Libris, etap 2/3: aplikacja konsolowa do zarządzania biblioteką, napisana obie
 - [x] `BookService`: egzemplarze, katalog z liczbą sztuk, wyszukiwanie, testy z Mockito
 - [x] `MemberService`: czytelnicy, unikalny e-mail, lista z liczbą wypożyczeń, wyszukiwanie, testy z Mockito
 - [x] `LoanService`: wypożyczanie po ISBN, zwroty, limity, listy wypożyczeń, testy z Mockito
+- [x] Interfejs konsolowy, fundament: `ConsoleIO`, `LibraryContext`, folder danych jako argument
+- [ ] Interfejs konsolowy, menu (katalog, czytelnicy, wypożyczenia)
 - [ ] Menu konsolowe
 - [ ] Wydanie 1.0.0 z gotowym plikiem JAR
 
@@ -85,6 +87,15 @@ a w aplikacji zegara systemowego. Dzięki temu wyniki testów nie zależą od dn
 
 Projekt jest na etapie konfiguracji, więc aplikacja nie jest jeszcze gotowa do uruchomienia.
 Budowanie projektu: `mvn clean package` albo w IntelliJ: okno **Maven** → **Lifecycle** → **package**.
+
+### Folder z danymi
+
+Program zapisuje dane w plikach JSON (`books.json`, `members.json`, `loans.json`).
+Domyślnie używa folderu `data` obok miejsca uruchomienia. Inny folder podaję jako pierwszy argument:
+
+    java -jar libris-core.jar C:\moje-dane
+
+Brakujący folder tworzę automatycznie.
 
 ## Organizacja pracy
 
