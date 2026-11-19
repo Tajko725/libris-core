@@ -9,3 +9,7 @@ out/
 # System
 .DS_Store
 Thumbs.db
+
+# Dane użytkownika zapisywane przez aplikację
+/data/
+demo-data/
