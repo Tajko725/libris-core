@@ -31,7 +31,7 @@ Libris, etap 2/3: aplikacja konsolowa do zarządzania biblioteką, napisana obie
 - [x] Modele `Member` (czytelnik) i `Loan` (wypożyczenie) z walidacją i testami jednostkowymi
 - [x] Repozytorium zapisujące dane do plików JSON z bezpiecznym zapisem i testami
 - [x] `BookService`: egzemplarze, katalog z liczbą sztuk, wyszukiwanie, testy z Mockito
-- [ ] `MemberService`
+- [x] `MemberService`: czytelnicy, unikalny e-mail, lista z liczbą wypożyczeń, wyszukiwanie, testy z Mockito
 - [ ] `LoanService`
 - [ ] Menu konsolowe
 - [ ] Wydanie 1.0.0 z gotowym plikiem JAR
@@ -59,6 +59,11 @@ Katalog `data/` dodaję do `.gitignore`, więc dane nie trafiają do repozytoriu
 Błędy logiki biblioteki zgłaszam własnymi wyjątkami z bazą `LibraryException`:
 `EntityNotFoundException` (brak książki lub czytelnika) i `BusinessRuleException` (naruszenie reguły, np. usunięcie wypożyczonej książki).
 Niepoprawne dane wejściowe zgłaszam jako `IllegalArgumentException`.
+
+## Czas w serwisach
+
+Serwisy dostają zegar (`java.time.Clock`) przez konstruktor, więc w testach używam stałej daty,
+a w aplikacji zegara systemowego. Dzięki temu wyniki testów nie zależą od dnia ich uruchomienia.
 
 ## Planowana architektura
 
