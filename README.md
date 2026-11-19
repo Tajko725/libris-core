@@ -21,6 +21,8 @@ Libris, etap 2/3: aplikacja konsolowa do zarządzania biblioteką, napisana obie
 | maven-compiler-plugin | 3.14.0 |
 | maven-surefire-plugin | 3.5.5 |
 | maven-shade-plugin | 3.6.2 |
+| Mockito | 5.24.0 |
+| maven-dependency-plugin | 3.8.1 |
 
 ## Postęp
 
@@ -28,7 +30,9 @@ Libris, etap 2/3: aplikacja konsolowa do zarządzania biblioteką, napisana obie
 - [x] Model `Book` (UUID, ISBN, gatunek) z walidacją i testami jednostkowymi
 - [x] Modele `Member` (czytelnik) i `Loan` (wypożyczenie) z walidacją i testami jednostkowymi
 - [x] Repozytorium zapisujące dane do plików JSON z bezpiecznym zapisem i testami
-- [ ] Serwisy: `BookService`, `MemberService`, `LoanService`
+- [x] `BookService`: egzemplarze, katalog z liczbą sztuk, wyszukiwanie, testy z Mockito
+- [ ] `MemberService`
+- [ ] `LoanService`
 - [ ] Menu konsolowe
 - [ ] Wydanie 1.0.0 z gotowym plikiem JAR
 
@@ -49,6 +53,12 @@ Po każdej zmianie zapisuję dane najpierw do pliku tymczasowego, a dopiero pote
 dzięki czemu przerwanie programu w trakcie zapisu nie uszkadza danych.
 Gdy plik jest uszkodzony, aplikacja zgłasza błąd zamiast zaczynać od pustych danych.
 Katalog `data/` dodaję do `.gitignore`, więc dane nie trafiają do repozytorium.
+
+## Obsługa błędów
+
+Błędy logiki biblioteki zgłaszam własnymi wyjątkami z bazą `LibraryException`:
+`EntityNotFoundException` (brak książki lub czytelnika) i `BusinessRuleException` (naruszenie reguły, np. usunięcie wypożyczonej książki).
+Niepoprawne dane wejściowe zgłaszam jako `IllegalArgumentException`.
 
 ## Planowana architektura
 
