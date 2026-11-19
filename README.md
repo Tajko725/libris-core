@@ -34,7 +34,8 @@ Libris, etap 2/3: aplikacja konsolowa do zarządzania biblioteką, napisana obie
 - [x] `MemberService`: czytelnicy, unikalny e-mail, lista z liczbą wypożyczeń, wyszukiwanie, testy z Mockito
 - [x] `LoanService`: wypożyczanie po ISBN, zwroty, limity, listy wypożyczeń, testy z Mockito
 - [x] Interfejs konsolowy, fundament: `ConsoleIO`, `LibraryContext`, folder danych jako argument
-- [ ] Interfejs konsolowy, menu (katalog, czytelnicy, wypożyczenia)
+- [x] Interfejs konsolowy: menu główne, katalog książek (z podglądem egzemplarzy) i czytelnicy
+- [ ] Interfejs konsolowy: wypożyczenia i zwroty, dane przykładowe
 - [ ] Menu konsolowe
 - [ ] Wydanie 1.0.0 z gotowym plikiem JAR
 
