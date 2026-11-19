@@ -2,6 +2,9 @@ package pl.tajko.library.model;
 
 import java.time.LocalDate;
 import java.util.UUID;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Wypożyczenie jednego egzemplarza książki przez czytelnika.
@@ -64,7 +67,13 @@ public class Loan {
      *                   nie może być wcześniejsza niż data wypożyczenia
      * @throws IllegalArgumentException jeśli którykolwiek argument jest niepoprawny
      */
-    public Loan(UUID id, UUID bookId, UUID memberId, LocalDate loanDate, LocalDate dueDate, LocalDate returnDate) {
+    @JsonCreator
+    public Loan(@JsonProperty("id") UUID id,
+                @JsonProperty("bookId") UUID bookId,
+                @JsonProperty("memberId") UUID memberId,
+                @JsonProperty("loanDate") LocalDate loanDate,
+                @JsonProperty("dueDate") LocalDate dueDate,
+                @JsonProperty("returnDate") LocalDate returnDate) {
         this.id = requireNonNull(id, "Identyfikator wypożyczenia");
         this.bookId = requireNonNull(bookId, "Identyfikator książki");
         this.memberId = requireNonNull(memberId, "Identyfikator czytelnika");
@@ -138,6 +147,7 @@ public class Loan {
      *
      * @return {@code true}, jeśli nie ma daty zwrotu
      */
+    @JsonIgnore
     public boolean isActive() {
         return returnDate == null;
     }
