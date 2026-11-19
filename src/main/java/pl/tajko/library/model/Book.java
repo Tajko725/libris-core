@@ -4,6 +4,10 @@ import pl.tajko.library.validation.IsbnValidator;
 
 import java.time.Year;
 import java.util.UUID;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 
 /**
  * Pojedynczy egzemplarz książki w bibliotece.
@@ -67,7 +71,13 @@ public class Book {
      * @param genre           gatunek, nie może być {@code null}
      * @throws IllegalArgumentException jeśli którykolwiek argument jest niepoprawny
      */
-    public Book(UUID id, String title, String author, int publicationYear, String isbn, Genre genre) {
+    @JsonCreator
+    public Book(@JsonProperty("id") UUID id,
+                @JsonProperty("title") String title,
+                @JsonProperty("author") String author,
+                @JsonProperty("publicationYear") int publicationYear,
+                @JsonProperty("isbn") String isbn,
+                @JsonProperty("genre") Genre genre) {
         if (id == null) {
             throw new IllegalArgumentException("Identyfikator nie może być pusty");
         }
@@ -93,6 +103,7 @@ public class Book {
      *
      * @return skrócony identyfikator, np. "3f2a9c1e"
      */
+    @JsonIgnore
     public String getShortId() {
         return id.toString().substring(0, SHORT_ID_LENGTH);
     }

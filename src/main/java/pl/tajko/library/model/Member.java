@@ -4,6 +4,9 @@ import java.time.LocalDate;
 import java.util.Locale;
 import java.util.UUID;
 import java.util.regex.Pattern;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Czytelnik zarejestrowany w bibliotece.
@@ -59,7 +62,12 @@ public class Member {
      * @param registeredAt data rejestracji, nie może być {@code null} ani z przyszłości
      * @throws IllegalArgumentException jeśli którykolwiek argument jest niepoprawny
      */
-    public Member(UUID id, String firstName, String lastName, String email, LocalDate registeredAt) {
+    @JsonCreator
+    public Member(@JsonProperty("id") UUID id,
+                  @JsonProperty("firstName") String firstName,
+                  @JsonProperty("lastName") String lastName,
+                  @JsonProperty("email") String email,
+                  @JsonProperty("registeredAt") LocalDate registeredAt) {
         if (id == null) {
             throw new IllegalArgumentException("Identyfikator nie może być pusty");
         }
@@ -122,6 +130,7 @@ public class Member {
      *
      * @return tekst w formacie "Imię Nazwisko"
      */
+    @JsonIgnore
     public String getFullName() {
         return firstName + " " + lastName;
     }
