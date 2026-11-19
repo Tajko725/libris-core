@@ -21,8 +21,9 @@ import java.util.List;
  * 1 aktywne po terminie (czytelnik z takim wypożyczeniem nie może brać kolejnych książek)
  * oraz 1 już zwrócone. Numery ISBN mają poprawne sumy kontrolne, ale nie odpowiadają prawdziwym wydaniom.
  * <p>
- * Wypożyczenia z datą z przeszłości są zapisywane bezpośrednio w repozytorium, bo
- * {@link LoanService} zawsze wypożycza "od dzisiaj".
+ * Czytelnicy (z datą rejestracji sprzed 90 do 200 dni) i wypożyczenia z datą z przeszłości są zapisywane
+ * bezpośrednio w repozytoriach, bo serwisy zawsze działają "od dzisiaj". Dzięki temu żaden czytelnik nie ma
+ * wypożyczenia sprzed swojej rejestracji.
  */
 public class DemoDataLoader {
 
@@ -92,6 +93,9 @@ public class DemoDataLoader {
     /** Serwis wypożyczeń. */
     private final LoanService loanService;
 
+    /** Repozytorium czytelników, używane do zapisu czytelników z datą rejestracji z przeszłości. */
+    private final Repository<Member> memberRepository;
+
     /** Repozytorium wypożyczeń, używane do zapisu wypożyczeń z datą z przeszłości. */
     private final Repository<Loan> loanRepository;
 
@@ -99,24 +103,26 @@ public class DemoDataLoader {
     private final Clock clock;
 
     /**
-     * Tworzy loader korzystający z podanych serwisów.
+     * Tworzy loader korzystający z podanych serwisów i repozytoriów.
      *
-     * @param bookService    serwis książek, nie może być {@code null}
-     * @param memberService  serwis czytelników, nie może być {@code null}
-     * @param loanService    serwis wypożyczeń, nie może być {@code null}
-     * @param loanRepository repozytorium wypożyczeń, nie może być {@code null}
-     * @param clock          zegar, nie może być {@code null}
+     * @param bookService      serwis książek, nie może być {@code null}
+     * @param memberService    serwis czytelników, nie może być {@code null}
+     * @param loanService      serwis wypożyczeń, nie może być {@code null}
+     * @param memberRepository repozytorium czytelników, nie może być {@code null}
+     * @param loanRepository   repozytorium wypożyczeń, nie może być {@code null}
+     * @param clock            zegar, nie może być {@code null}
      * @throws IllegalArgumentException jeśli którykolwiek argument jest {@code null}
      */
     public DemoDataLoader(BookService bookService, MemberService memberService, LoanService loanService,
-                          Repository<Loan> loanRepository, Clock clock) {
+                          Repository<Member> memberRepository, Repository<Loan> loanRepository, Clock clock) {
         if (bookService == null || memberService == null || loanService == null
-                || loanRepository == null || clock == null) {
-            throw new IllegalArgumentException("Serwisy, repozytorium i zegar nie mogą być puste");
+                || memberRepository == null || loanRepository == null || clock == null) {
+            throw new IllegalArgumentException("Serwisy, repozytoria i zegar nie mogą być puste");
         }
         this.bookService = bookService;
         this.memberService = memberService;
         this.loanService = loanService;
+        this.memberRepository = memberRepository;
         this.loanRepository = loanRepository;
         this.clock = clock;
     }
@@ -150,11 +156,13 @@ public class DemoDataLoader {
                     seed.genre(), seed.copies()).size();
         }
 
-        Member anna = memberService.addMember("Anna", "Nowak", "anna.nowak@example.com");
-        Member jan = memberService.addMember("Jan", "Kowalski", "jan.kowalski@example.com");
-        Member piotr = memberService.addMember("Piotr", "Zieliński", "piotr.zielinski@example.com");
-        Member katarzyna = memberService.addMember("Katarzyna", "Wiśniewska", "katarzyna.wisniewska@example.com");
-        Member lukasz = memberService.addMember("Łukasz", "Wójcik", "lukasz.wojcik@example.com");
+        // czytelnicy zarejestrowani dawno temu, przed swoimi najstarszymi wypożyczeniami
+        Member anna = saveMember("Anna", "Nowak", "anna.nowak@example.com", today.minusDays(120));
+        Member jan = saveMember("Jan", "Kowalski", "jan.kowalski@example.com", today.minusDays(200));
+        Member piotr = saveMember("Piotr", "Zieliński", "piotr.zielinski@example.com", today.minusDays(90));
+        Member katarzyna = saveMember("Katarzyna", "Wiśniewska", "katarzyna.wisniewska@example.com",
+                today.minusDays(150));
+        Member lukasz = saveMember("Łukasz", "Wójcik", "lukasz.wojcik@example.com", today.minusDays(100));
 
         loanService.borrow(jan.getId(), SOLARIS.isbn());
         loanService.borrow(jan.getId(), LALKA.isbn());
@@ -185,5 +193,20 @@ public class DemoDataLoader {
             loan.markAsReturned(returnDate);
         }
         loanRepository.save(loan);
+    }
+
+    /**
+     * Zapisuje czytelnika z podaną datą rejestracji bezpośrednio w repozytorium.
+     *
+     * @param firstName    imię
+     * @param lastName     nazwisko
+     * @param email        adres e-mail
+     * @param registeredAt data rejestracji (z przeszłości)
+     * @return zapisany czytelnik
+     */
+    private Member saveMember(String firstName, String lastName, String email, LocalDate registeredAt) {
+        Member member = new Member(firstName, lastName, email, registeredAt);
+        memberRepository.save(member);
+        return member;
     }
 }
