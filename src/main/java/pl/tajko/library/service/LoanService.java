@@ -221,7 +221,7 @@ public class LoanService {
      * Zamienia wypożyczenia na podsumowania z tytułami i nazwiskami oraz sortuje je.
      * Książki i czytelnicy są wczytywani jednorazowo i szukani w mapach.
      *
-     * @param loans park wypożyczeń do przetworzenia
+     * @param loans lista wypożyczeń do przetworzenia
      * @param order wymagana kolejność wyniku
      * @return posortowana lista podsumowań
      */
