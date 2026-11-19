@@ -32,7 +32,7 @@ Libris, etap 2/3: aplikacja konsolowa do zarządzania biblioteką, napisana obie
 - [x] Repozytorium zapisujące dane do plików JSON z bezpiecznym zapisem i testami
 - [x] `BookService`: egzemplarze, katalog z liczbą sztuk, wyszukiwanie, testy z Mockito
 - [x] `MemberService`: czytelnicy, unikalny e-mail, lista z liczbą wypożyczeń, wyszukiwanie, testy z Mockito
-- [ ] `LoanService`
+- [x] `LoanService`: wypożyczanie po ISBN, zwroty, limity, listy wypożyczeń, testy z Mockito
 - [ ] Menu konsolowe
 - [ ] Wydanie 1.0.0 z gotowym plikiem JAR
 
@@ -64,6 +64,14 @@ Niepoprawne dane wejściowe zgłaszam jako `IllegalArgumentException`.
 
 Serwisy dostają zegar (`java.time.Clock`) przez konstruktor, więc w testach używam stałej daty,
 a w aplikacji zegara systemowego. Dzięki temu wyniki testów nie zależą od dnia ich uruchomienia.
+
+## Zasady wypożyczeń
+
+- Wypożyczam po numerze ISBN, a program sam wybiera wolny egzemplarz.
+- Termin zwrotu to 30 dni od dnia wypożyczenia.
+- Czytelnik może mieć najwyżej 5 aktywnych wypożyczeń i tylko jeden egzemplarz danej książki naraz.
+- Czytelnik z książką po terminie zwrotu nie może wypożyczać kolejnych, dopóki jej nie odda.
+- Zwrot rejestruję po identyfikatorze wypożyczenia. Prolongaty na razie nie ma.
 
 ## Planowana architektura
 
