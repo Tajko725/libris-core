@@ -49,7 +49,7 @@ class MainMenuTest {
      */
     private DemoDataLoader demoLoader() {
         return new DemoDataLoader(context.bookService(), context.memberService(), context.loanService(),
-                context.loanRepository(), CLOCK);
+                context.memberRepository(), context.loanRepository(), CLOCK);
     }
 
     /**

@@ -43,7 +43,7 @@ public final class Main {
                     new MemberMenu(io, context.memberService()),
                     new LoanMenu(io, context.loanService(), context.memberService(), context.bookService()),
                     new DemoDataLoader(context.bookService(), context.memberService(), context.loanService(),
-                            context.loanRepository(), clock));
+                            context.memberRepository(), context.loanRepository(), clock));
             mainMenu.run();
         } catch (InputClosedException e) {
             io.println();

@@ -44,6 +44,9 @@ public class LibraryContext {
     /** Serwis wypożyczeń. */
     private final LoanService loanService;
 
+    /** Repozytorium czytelników, udostępniane wyłącznie danym przykładowym. */
+    private final Repository<Member> memberRepository;
+
     /** Repozytorium wypożyczeń, udostępniane wyłącznie danym przykładowym. */
     private final Repository<Loan> loanRepository;
 
@@ -68,8 +71,7 @@ public class LibraryContext {
 
         Repository<Book> bookRepository =
                 new JsonRepository<>(dataDir.resolve(BOOKS_FILE), Book.class, Book::getId);
-        Repository<Member> memberRepository =
-                new JsonRepository<>(dataDir.resolve(MEMBERS_FILE), Member.class, Member::getId);
+        this.memberRepository = new JsonRepository<>(dataDir.resolve(MEMBERS_FILE), Member.class, Member::getId);
         this.loanRepository = new JsonRepository<>(dataDir.resolve(LOANS_FILE), Loan.class, Loan::getId);
 
         this.bookService = new BookService(bookRepository, loanRepository);
@@ -123,5 +125,17 @@ public class LibraryContext {
      */
     public Repository<Loan> loanRepository() {
         return loanRepository;
+    }
+
+    /**
+     * Zwraca repozytorium czytelników.
+     * <p>
+     * Normalnie używa się {@link MemberService}. Repozytorium jest udostępnione tylko po to, aby dane przykładowe
+     * mogły zapisać czytelników z datą rejestracji z przeszłości (serwis zawsze rejestruje "od dzisiaj").
+     *
+     * @return repozytorium czytelników
+     */
+    public Repository<Member> memberRepository() {
+        return memberRepository;
     }
 }

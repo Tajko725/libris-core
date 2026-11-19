@@ -8,11 +8,13 @@ import pl.tajko.library.LibraryContext;
 import pl.tajko.library.exception.BusinessRuleException;
 import pl.tajko.library.model.Member;
 import pl.tajko.library.service.BookSummary;
+import pl.tajko.library.service.LoanSummary;
 import pl.tajko.library.service.MemberSummary;
 
 import java.nio.file.Path;
 import java.time.Clock;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.ZoneId;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -48,7 +50,7 @@ class DemoDataLoaderTest {
     void setUp() {
         context = new LibraryContext(tempDir, CLOCK);
         loader = new DemoDataLoader(context.bookService(), context.memberService(), context.loanService(),
-                context.loanRepository(), CLOCK);
+                context.memberRepository(), context.loanRepository(), CLOCK);
     }
 
     /**
@@ -59,16 +61,23 @@ class DemoDataLoaderTest {
     void shouldRejectNullDependencies() {
         assertAll(
                 () -> assertThrows(IllegalArgumentException.class, () -> new DemoDataLoader(null,
-                        context.memberService(), context.loanService(), context.loanRepository(), CLOCK)),
+                        context.memberService(), context.loanService(), context.memberRepository(),
+                        context.loanRepository(), CLOCK)),
                 () -> assertThrows(IllegalArgumentException.class, () -> new DemoDataLoader(
-                        context.bookService(), null, context.loanService(), context.loanRepository(), CLOCK)),
+                        context.bookService(), null, context.loanService(), context.memberRepository(),
+                        context.loanRepository(), CLOCK)),
                 () -> assertThrows(IllegalArgumentException.class, () -> new DemoDataLoader(
-                        context.bookService(), context.memberService(), null, context.loanRepository(), CLOCK)),
+                        context.bookService(), context.memberService(), null, context.memberRepository(),
+                        context.loanRepository(), CLOCK)),
                 () -> assertThrows(IllegalArgumentException.class, () -> new DemoDataLoader(
-                        context.bookService(), context.memberService(), context.loanService(), null, CLOCK)),
+                        context.bookService(), context.memberService(), context.loanService(), null,
+                        context.loanRepository(), CLOCK)),
                 () -> assertThrows(IllegalArgumentException.class, () -> new DemoDataLoader(
                         context.bookService(), context.memberService(), context.loanService(),
-                        context.loanRepository(), null))
+                        context.memberRepository(), null, CLOCK)),
+                () -> assertThrows(IllegalArgumentException.class, () -> new DemoDataLoader(
+                        context.bookService(), context.memberService(), context.loanService(),
+                        context.memberRepository(), context.loanRepository(), null))
         );
     }
 
@@ -142,6 +151,21 @@ class DemoDataLoaderTest {
         BusinessRuleException exception = assertThrows(BusinessRuleException.class,
                 () -> context.loanService().borrow(overdueMember.getId(), isbn));
         assertTrue(exception.getMessage().contains("po terminie"));
+    }
+
+    /**
+     * Żaden czytelnik nie powinien mieć wypożyczenia sprzed swojej rejestracji.
+     */
+    @Test
+    @DisplayName("czytelnicy są zarejestrowani przed swoimi wypożyczeniami")
+    void shouldRegisterMembersBeforeTheirLoans() {
+        loader.load();
+
+        for (LoanSummary loan : context.loanService().getHistory()) {
+            LocalDate registeredAt = context.memberService().getMember(loan.memberId()).getRegisteredAt();
+            assertFalse(loan.loanDate().isBefore(registeredAt),
+                    loan.memberName() + " ma wypożyczenie sprzed rejestracji");
+        }
     }
 
     /**
