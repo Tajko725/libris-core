@@ -8,7 +8,7 @@ Libris, etap 2/3: aplikacja konsolowa do zarządzania biblioteką, napisana obie
 |------|---------|--------|--------|
 | 1/3 | [libris-cli](https://github.com/Tajko725/libris-cli) | Podstawy Javy, konsola, dane w pamięci | gotowy (v1.0.1) |
 | **2/3** | **libris-core** (ten projekt) | Programowanie obiektowe, warstwy, zapis do JSON | gotowy (v1.0.0) |
-| 3/3 | [libris-api](https://github.com/Tajko725/libris-api)| Spring Boot, REST API, baza PostgreSQL| gotowy (v1.0.0) |
+| 3/3 | [libris-api](https://github.com/Tajko725/libris-api)| Spring Boot, REST API, baza PostgreSQL| gotowy (v1.1.0) |
 
 ## Technologie
 
