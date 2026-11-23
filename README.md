@@ -94,8 +94,6 @@ Do uruchomienia wystarczy zainstalowana Java 25:
 
 Przy pierwszym uruchomieniu wybieram w menu „Załaduj dane przykładowe”, żeby od razu zobaczyć, jak działa program.
 
-## Uruchomienie
-
 ### Budowanie ze źródeł
 
 W IntelliJ: **Maven** → **Lifecycle** → **clean**, potem **package**. Gotowy plik jest w
