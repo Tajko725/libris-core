@@ -6,9 +6,9 @@ Libris, etap 2/3: aplikacja konsolowa do zarządzania biblioteką, napisana obie
 
 | Etap | Projekt | Zakres | Status |
 |------|---------|--------|--------|
-| 1/3 | [libris-cli](https://github.com/Tajko725/libris-cli) | Podstawy Javy, konsola, dane w pamięci | gotowy (v1.0.0) |
+| 1/3 | [libris-cli](https://github.com/Tajko725/libris-cli) | Podstawy Javy, konsola, dane w pamięci | gotowy (v1.0.1) |
 | **2/3** | **libris-core** (ten projekt) | Programowanie obiektowe, warstwy, zapis do JSON | gotowy (v1.0.0) |
-| 3/3 | libris-api | Spring Boot, REST API, baza PostgreSQL | planowany |
+| 3/3 | [libris-api](https://github.com/Tajko725/libris-api)| Spring Boot, REST API, baza PostgreSQL| gotowy (v1.0.0) |
 
 ## Technologie
 
@@ -77,7 +77,7 @@ a w aplikacji zegara systemowego. Dzięki temu wyniki testów nie zależą od dn
 - Czytelnik z książką po terminie zwrotu nie może wypożyczać kolejnych, dopóki jej nie odda.
 - Zwrot rejestruję po identyfikatorze wypożyczenia. Prolongaty na razie nie ma.
 
-## Planowana architektura
+## Architektura
 
 - `model` – klasy domenowe (`Book`, `Member`, `Loan`),
 - `repository` – interfejs repozytorium i implementacje zapisujące do JSON,
@@ -93,11 +93,6 @@ Do uruchomienia wystarczy zainstalowana Java 25:
     java -jar libris-core-1.0.0.jar
 
 Przy pierwszym uruchomieniu wybieram w menu „Załaduj dane przykładowe”, żeby od razu zobaczyć, jak działa program.
-
-## Uruchomienie
-
-Projekt jest na etapie konfiguracji, więc aplikacja nie jest jeszcze gotowa do uruchomienia.
-Budowanie projektu: `mvn clean package` albo w IntelliJ: okno **Maven** → **Lifecycle** → **package**.
 
 ### Budowanie ze źródeł
 
